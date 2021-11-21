@@ -5,13 +5,13 @@ export class UserEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    firstName: string;
+    @Column({nullable: true})
+    firstName?: string;
 
-    @Column()
-    lastName: string;
+    @Column({nullable: true})
+    lastName?: string;
 
-    @Column()
+    @Column({unique:true})
     email: string;
 
     @Column()
