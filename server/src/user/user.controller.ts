@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
 import { IUserResponse } from './types';
 import { Request } from 'express';
-import { ExpressRequestInterface } from 'src/types';
 import { User } from '../decorators';
+import { AuthGuard } from './guards';
 
 @Controller('user')
 export class UserController {
@@ -26,6 +26,7 @@ export class UserController {
   }
 
   @Get('current')
+  @UseGuards(AuthGuard)
   async currentUser(@User() user: UserEntity) {
     return this.userService.buldUserResponse(user);
   }
