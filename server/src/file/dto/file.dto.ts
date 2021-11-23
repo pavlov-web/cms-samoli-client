@@ -1,4 +1,4 @@
 export class FileElementsResponse {
-    url: string;
-    name: string;
+	url: string;
+	name: string;
 }

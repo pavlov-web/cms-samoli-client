@@ -8,26 +8,26 @@ export class PortfolioController {
 
   @Post('create')
   create(@Body() dto: CreatePortfolioDto) {
-    return this.portfolioService.create(dto);
+	return this.portfolioService.create(dto);
   }
 
   @Get('all')
   findAll() {
-    return this.portfolioService.findAll();
+	return this.portfolioService.findAll();
   }
 
   @Get(':slug')
   findBySlug(@Param('slug') slug: string) {
-    return this.portfolioService.findBySlug(slug);
+	return this.portfolioService.findBySlug(slug);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto) {
-    return this.portfolioService.update(+id, dto);
+	return this.portfolioService.update(+id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.portfolioService.remove(+id);
+	return this.portfolioService.remove(+id);
   }
 }

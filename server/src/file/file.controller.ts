@@ -1,7 +1,6 @@
 import { Controller, Post, HttpCode, UseInterceptors, UseGuards, UploadedFile } from '@nestjs/common';
 import { FileService, MFile } from './file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { FileElementsResponse } from './dto/file.dto';
 
 @Controller('file')
@@ -11,7 +10,6 @@ export class FileController {
   @Post('upload')
   @HttpCode(200)
   @UseInterceptors(FileInterceptor('files'))
-  @UseGuards(JwtAuthGuard)
   async upload(@UploadedFile() file: Express.Multer.File): Promise<FileElementsResponse[]> {
     const sizes = [1024, 768, 568, 100]
     const saveArray: MFile[] = [new MFile(file)];
