@@ -1,13 +1,14 @@
-import { Module } from '@nestjs/common';
+import {MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { getPgConfig } from 'configs/pg.configs';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { FileModule } from './file/file.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
+import { RoleModule } from './role/role.module';
+import { AuthMiddleware } from './user/middlewares/auth.middleware';
 
 @Module({
   imports: [
@@ -18,12 +19,19 @@ import { PortfolioModule } from './portfolio/portfolio.module';
           useFactory: getPgConfig
       }),
       UserModule,
-      AuthModule,
       FileModule,
-      PortfolioModule
+      PortfolioModule,
+      RoleModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 
-export class AppModule {};
+export class AppModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(AuthMiddleware).forRoutes({
+            path: '*',
+            method: RequestMethod.ALL
+        })
+    }
+};
