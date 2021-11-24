@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, Req, UseGuards, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -31,23 +31,19 @@ export class UserController {
     return this.userService.buldUserResponse(user);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    return this.userService.update(+id, dto);
+  @Put('update')
+  @UseGuards(AuthGuard)
+  async updateUser(@User('id') id: number, @Body() dto: UpdateUserDto) {
+    return await this.userService.update(id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Get()
+  findAll() {
+    return this.userService.findAll();
   }
 }
