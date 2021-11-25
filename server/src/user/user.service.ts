@@ -32,28 +32,22 @@ export class UserService {
     return user;
   }
 
-  findById(id: number) {
-    return this.repository.findOne(id)
+  async findById(id: number) {
+    return await this.repository.findOne(id)
   }
 
-  findAll() {
-    return this.repository.find();
+  async update(id: number, dto: UpdateUserDto) {
+    const user = await this.repository.findOne(id);
+    Object.assign(user, dto)
+    return this.repository.save(user)
   }
 
-  findOne(id: string) {
-    return this.repository.findOne(id);
+  async findAll() {
+    return await this.repository.find();
   }
 
-  findByCond(cond: LoginUserDto) {
-    return this.repository.findOne(cond);
-  }
-
-  update(id: number, dto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return this.repository.delete(id);
+  async remove(id: number) {
+    return await this.repository.delete(id);
   }
 
   buldUserResponse(user: UserEntity): IUserResponse {
