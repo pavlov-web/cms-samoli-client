@@ -4,35 +4,34 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PortfolioEntity } from './entities/portfolio.entity';
 import { Repository } from 'typeorm';
 import { titleToSlug } from '../helpers';
+import { ServiceService } from 'src/service/service.service';
 
 @Injectable()
 export class PortfolioService {
   constructor(
       @InjectRepository(PortfolioEntity)
-      private readonly repository: Repository<PortfolioEntity>
+      private readonly repository: Repository<PortfolioEntity>,
+      private readonly servieService: ServiceService
   ) {}
 
-  create(dto: CreatePortfolioDto) {
+  async create(dto: CreatePortfolioDto) {
     const portfolio = new PortfolioEntity();
-    Object.assign(portfolio, dto)
+    const {serviceIds, ...data} = dto;
+
+    Object.assign(portfolio, data)
     portfolio.slug = titleToSlug(portfolio.title);
+    portfolio.services = await this.servieService.findByIds(serviceIds)
 
-    return this.repository.save(portfolio);
+    return await this.repository.save(portfolio);
   }
 
-  findAll() {
-    return this.repository.find();
+  async update() {}
+
+  async findById(id: number) {
+    return this.repository.findOne(id, {relations: ['services']})
   }
 
-  findBySlug(slug: string) {
-    return this.repository.findOne({ slug });
-  }
+  async findAll() {}
 
-  update(id: number, dto) {
-    return this.repository.update(id, dto);
-  }
-
-  remove(id: number) {
-    return this.repository.delete({ id });
-  }
+  async delete() {}
 }

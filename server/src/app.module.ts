@@ -7,8 +7,8 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { FileModule } from './file/file.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
-import { RoleModule } from './role/role.module';
 import { AuthMiddleware } from './user/middlewares/auth.middleware';
+import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { AuthMiddleware } from './user/middlewares/auth.middleware';
       UserModule,
       FileModule,
       PortfolioModule,
-      RoleModule
+      ServiceModule
   ],
   controllers: [AppController],
   providers: [AppService],
