@@ -12,8 +12,8 @@ export class PortfolioEntity {
 	@Column()
 	slug: string;
 
-	@Column('simple-array', { default: null })
-	gallery: string[];
+	@Column({array: true, default: []})
+	gallery: string;
 
 	@Column({default: ''})
 	after_photo: string;
@@ -24,13 +24,19 @@ export class PortfolioEntity {
 	@Column({default: ''})
 	content: string;
 
-	@Column({default: ''})
+	@Column({array: true, default: []})
 	video: string;
 
-	@ManyToMany(() => ServiceEntity, service => service.portfolio, {
-		cascade: ["insert", "update", "remove", "soft-remove", "recover"],
-		onDelete: 'CASCADE'
-	})
+	@Column({array: true, default: []})
+	review: string;
+
+	@Column({array: true, default: []})
+	category: string;
+
+	@Column({array: true, default: []})
+	fabric: string;
+
+	@ManyToMany(() => ServiceEntity, service => service.portfolio)
 	@JoinTable()
 	services: ServiceEntity[];
 

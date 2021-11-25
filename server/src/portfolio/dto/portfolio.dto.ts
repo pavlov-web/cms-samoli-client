@@ -22,22 +22,13 @@ export class CreatePortfolioDto {
 
     @IsOptional()
     readonly video: string;
-}
 
-export class UpdatePortfolioDto {
-    @IsNotEmpty()
-    readonly title: string;
+    @IsOptional()
+    review: string[];
 
-    @IsNotEmpty()
-    readonly service: string;
+    @IsOptional()
+    category: string[];
 
-    readonly gallery: string[];
-
-    readonly after_photo?: string;
-
-    readonly before_photo?: string;
-
-    readonly content?: string;
-
-    readonly video?: string;
+    @IsOptional()
+    fabric: string[];
 }
