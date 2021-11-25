@@ -1,4 +1,5 @@
-import {BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ServiceEntity } from "src/service/entities/service.entity";
+import {BeforeUpdate, Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
 
 @Entity('portfolio')
 export class PortfolioEntity {
@@ -11,10 +12,7 @@ export class PortfolioEntity {
 	@Column()
 	slug: string;
 
-	@Column()
-	service: string;
-
-	@Column('simple-array', {default: null})
+	@Column('simple-array', { default: null })
 	gallery: string[];
 
 	@Column({default: ''})
@@ -28,6 +26,13 @@ export class PortfolioEntity {
 
 	@Column({default: ''})
 	video: string;
+
+	@ManyToMany(() => ServiceEntity, service => service.portfolio, {
+		cascade: ["insert", "update", "remove", "soft-remove", "recover"],
+		onDelete: 'CASCADE'
+	})
+	@JoinTable()
+	services: ServiceEntity[];
 
 	@Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
 	createAt: Date;
