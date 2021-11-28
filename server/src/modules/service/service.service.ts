@@ -35,7 +35,7 @@ export class ServiceService {
   }
 
   async findByIds(ids: number[]) {
-    return await this.repository.findByIds(ids, { relations: ['portfolio'] });
+    return await this.repository.findByIds(ids);
   }
 
   async findAll() {

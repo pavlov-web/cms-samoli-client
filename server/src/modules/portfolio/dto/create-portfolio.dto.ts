@@ -1,11 +1,12 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { dtoErrors } from '../../../errors/dtoErrors.js';
 
 export class CreatePortfolioDto {
-  @IsNotEmpty()
+  @IsNotEmpty({ message: dtoErrors.isEmpty })
   readonly title: string;
 
   @IsOptional()
-  readonly serviceIds: number[];
+  readonly services: number[];
 
   @IsOptional()
   readonly gallery: string[];
