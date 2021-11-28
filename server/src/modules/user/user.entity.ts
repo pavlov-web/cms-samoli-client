@@ -4,9 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
-import { hash } from 'bcrypt';
+import { classToPlain, Exclude } from 'class-transformer';
 
 @Entity('users')
 export class UserEntity {
@@ -22,7 +22,8 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({ select: false })
+  @Column()
+  @Exclude({ toPlainOnly: true })
   password: string;
 
   @Column({ nullable: true })
@@ -37,8 +38,12 @@ export class UserEntity {
   @UpdateDateColumn()
   updateAt: Date;
 
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await hash(this.password, 10);
+  @BeforeUpdate()
+  updateTimestamp() {
+    this.updateAt = new Date();
+  }
+
+  toJSON() {
+    return classToPlain(this);
   }
 }

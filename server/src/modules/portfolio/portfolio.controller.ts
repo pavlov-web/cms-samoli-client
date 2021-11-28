@@ -8,7 +8,7 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '../user/guards/auth.guard';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import { CreatePortfolioDto } from './dto/portfolio.dto';
 import { PortfolioService } from './portfolio.service';
 

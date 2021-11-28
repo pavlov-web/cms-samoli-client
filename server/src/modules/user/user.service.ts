@@ -1,13 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { sign } from 'jsonwebtoken';
-import { IUserResponse } from './types';
-import { compare } from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { errors } from '../../errors/messages.js';
 
 @Injectable()
 export class UserService {
@@ -16,58 +12,27 @@ export class UserService {
   ) {}
 
   async create(dto: CreateUserDto) {
-    const isUser = await this.repository.findOne({ email: dto.email });
-    if (isUser)
-      throw new HttpException(
-        'Email уже зарегистрирован',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
+    const isExist = await this.repository.findOne({ email: dto.email });
+    if (isExist) {
+      throw new BadRequestException([errors.emailExist]);
+    }
 
     const user = Object.assign(new UserEntity(), dto);
     return this.repository.save(user);
   }
 
-  async login(dto: LoginUserDto) {
-    const user = await this.repository.findOne(
-      { email: dto.email },
-      {
-        select: [
-          'id',
-          'firstName',
-          'lastName',
-          'position',
-          'email',
-          'password',
-          'createAt',
-          'updateAt',
-        ],
-      },
-    );
-    if (!user)
-      throw new HttpException(
-        'Неверный Email',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
+  async update(id: number, dto: CreateUserDto) {
+    const user = await this.repository.findOne(id);
+    Object.assign(user, dto);
+    return this.repository.save(user);
+  }
 
-    const isPasswordCorrect = await compare(dto.password, user.password);
-    if (!isPasswordCorrect)
-      throw new HttpException(
-        'Неверный пароль',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-
-    delete user.password;
-    return user;
+  async findByEmail(email: string): Promise<UserEntity> {
+    return await this.repository.findOne({ email });
   }
 
   async findById(id: number) {
     return await this.repository.findOne(id);
-  }
-
-  async update(id: number, dto: UpdateUserDto) {
-    const user = await this.repository.findOne(id);
-    Object.assign(user, dto);
-    return this.repository.save(user);
   }
 
   async findAll() {
@@ -76,22 +41,5 @@ export class UserService {
 
   async remove(id: number) {
     return await this.repository.delete(id);
-  }
-
-  buldUserResponse(user: UserEntity): IUserResponse {
-    return {
-      ...user,
-      token: this.generateJwt(user),
-    };
-  }
-
-  private generateJwt(user: UserEntity) {
-    return sign(
-      {
-        id: user.id,
-        email: user.email,
-      },
-      'secret',
-    );
   }
 }

@@ -7,8 +7,9 @@ import { AppService } from './app.service';
 import { FileModule } from './modules/file/file.module';
 import { PortfolioModule } from './modules/portfolio/portfolio.module';
 import { ServiceModule } from './modules/service/service.module';
-import { AuthMiddleware } from './modules/user/middlewares/auth.middleware';
+import { AuthMiddleware } from './modules/auth/middlewares/auth.middleware';
 import { UserModule } from './modules/user/user.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './modules/user/user.module.js';
       inject: [ConfigService],
       useFactory: getPgConfig,
     }),
+    AuthModule,
     UserModule,
     FileModule,
     PortfolioModule,
