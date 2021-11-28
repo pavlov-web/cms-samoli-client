@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { errors } from '../../errors/messages.js';
 import { CreatePortfolioDto } from './dto/create-portfolio.dto.js';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,6 +17,7 @@ export class PortfolioService {
   constructor(
     @InjectRepository(PortfolioEntity)
     private readonly repository: Repository<PortfolioEntity>,
+    @Inject(forwardRef(() => ServiceService))
     private readonly serviceService: ServiceService,
   ) {}
 
@@ -39,6 +45,10 @@ export class PortfolioService {
 
   async findBySlug(slug: string): Promise<PortfolioEntity> {
     return await this.repository.findOne(slug, { relations: ['services'] });
+  }
+
+  async findByIds(ids: number[]) {
+    return await this.repository.findByIds(ids);
   }
 
   async findAll(): Promise<PortfolioEntity[]> {

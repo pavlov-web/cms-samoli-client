@@ -5,6 +5,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('service')
@@ -31,12 +33,12 @@ export class ServiceEntity {
   description: string;
 
   @ManyToMany(() => PortfolioEntity, (portfolio) => portfolio.services)
-  portfolio: PortfolioEntity[];
+  portfolio: PortfolioEntity[] | number[];
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   createAt: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn()
   updateAt: Date;
 
   @BeforeUpdate()

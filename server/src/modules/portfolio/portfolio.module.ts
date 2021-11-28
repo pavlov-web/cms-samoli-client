@@ -1,14 +1,17 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
+import { ServiceModule } from '../service/service.module.js';
 import { PortfolioService } from './portfolio.service';
 import { PortfolioController } from './portfolio.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PortfolioEntity } from './entities/portfolio.entity';
-import { ServiceService } from '../service/service.service';
-import { ServiceEntity } from '../service/entities/service.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PortfolioEntity, ServiceEntity])],
+  imports: [
+    TypeOrmModule.forFeature([PortfolioEntity]),
+    forwardRef(() => ServiceModule),
+  ],
   controllers: [PortfolioController],
-  providers: [PortfolioService, ServiceService],
+  providers: [PortfolioService],
+  exports: [PortfolioService],
 })
 export class PortfolioModule {}

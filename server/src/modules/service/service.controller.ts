@@ -6,9 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '../auth/guards/auth.guard';
+import { Auth } from '../auth/decorators/auth.decorator.js';
 import { CreateServiceDto } from './dto/service.dto';
 import { ServiceService } from './service.service';
 
@@ -17,30 +16,30 @@ export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
   @Post('create')
-  @UseGuards(AuthGuard)
-  async create(@Body() dto: CreateServiceDto) {
-    return await this.serviceService.create(dto);
+  @Auth()
+  create(@Body() dto: CreateServiceDto) {
+    return this.serviceService.create(dto);
   }
 
   @Patch('/update/:id')
-  @UseGuards(AuthGuard)
-  async update(@Param() id: number, @Body() dto: CreateServiceDto) {
-    return await this.serviceService.update(id, dto);
+  @Auth()
+  update(@Param() id: number, @Body() dto: CreateServiceDto) {
+    return this.serviceService.update(id, dto);
+  }
+
+  @Delete('delete')
+  @Auth()
+  delete(@Body('ids') ids: number[]) {
+    return this.serviceService.delete(ids);
   }
 
   @Get('all')
-  async findAll() {
-    return await this.serviceService.findAll();
+  findAll() {
+    return this.serviceService.findAll();
   }
 
   @Get(':slug')
-  async bySlug(@Param() slug: string) {
-    return await this.serviceService.findBySlug(slug);
-  }
-
-  @Delete('/delete/:id')
-  @UseGuards(AuthGuard)
-  async delete(@Param('id') id: number) {
-    return await this.serviceService.delete(id);
+  findBySlug(@Param() slug: string) {
+    return this.serviceService.findBySlug(slug);
   }
 }
