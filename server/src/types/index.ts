@@ -9,5 +9,5 @@ export enum UserRole {
   'ADMIN' = 'admin',
   'DIRECTOR' = 'director',
   'MANAGER' = 'manager',
-  'EMPLOYEE' = 'emploree',
+  'EMPLOYEE' = 'employee',
 }
