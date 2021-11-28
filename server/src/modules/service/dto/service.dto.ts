@@ -1,10 +1,11 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import { dtoErrors } from '../../../errors/dtoErrors.js';
 
 export class CreateServiceDto {
-  @IsNotEmpty()
+  @IsNotEmpty({ message: dtoErrors.isEmpty })
   readonly title: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   readonly price: string;
 
   @IsOptional()
