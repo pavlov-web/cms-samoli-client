@@ -6,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('portfolio')
@@ -45,12 +47,12 @@ export class PortfolioEntity {
 
   @ManyToMany(() => ServiceEntity, (service) => service.portfolio)
   @JoinTable()
-  services: ServiceEntity[];
+  services: ServiceEntity[] | number[];
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   createAt: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn()
   updateAt: Date;
 
   @BeforeUpdate()

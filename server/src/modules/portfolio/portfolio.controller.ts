@@ -6,10 +6,9 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '../auth/guards/auth.guard';
-import { CreatePortfolioDto } from './dto/portfolio.dto';
+import { Auth } from '../auth/decorators/auth.decorator.js';
+import { CreatePortfolioDto } from './dto/create-portfolio.dto.js';
 import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
@@ -17,30 +16,30 @@ export class PortfolioController {
   constructor(private readonly portfolioService: PortfolioService) {}
 
   @Post('create')
-  @UseGuards(AuthGuard)
-  async create(@Body() dto: CreatePortfolioDto) {
-    return await this.portfolioService.create(dto);
+  @Auth()
+  create(@Body() dto: CreatePortfolioDto) {
+    return this.portfolioService.create(dto);
   }
 
-  @Patch('/update/:id')
-  @UseGuards(AuthGuard)
-  async update(@Param() id: number, @Body() dto: CreatePortfolioDto) {
-    return await this.portfolioService.update(id, dto);
+  @Patch('/update/:slug')
+  @Auth()
+  update(@Param() slug: string, @Body() dto: CreatePortfolioDto) {
+    return this.portfolioService.update(slug, dto);
+  }
+
+  @Delete('delete')
+  @Auth()
+  delete(@Body('ids') ids: number[]) {
+    return this.portfolioService.delete(ids);
   }
 
   @Get('all')
-  async findAll() {
-    return await this.portfolioService.findAll();
+  findAll() {
+    return this.portfolioService.findAll();
   }
 
   @Get(':slug')
-  async bySlug(@Param() slug: string) {
-    return await this.portfolioService.findBySlug(slug);
-  }
-
-  @Delete('/delete/:id')
-  @UseGuards(AuthGuard)
-  async delete(@Param('id') id: number) {
-    return await this.portfolioService.delete(id);
+  findBySlug(@Param() slug: string) {
+    return this.portfolioService.findBySlug(slug);
   }
 }

@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePortfolioDto } from './dto/portfolio.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { errors } from '../../errors/messages.js';
+import { CreatePortfolioDto } from './dto/create-portfolio.dto.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PortfolioEntity } from './entities/portfolio.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { titleToSlug } from '../../helpers';
 import { ServiceService } from '../service/service.service';
 
@@ -11,55 +12,40 @@ export class PortfolioService {
   constructor(
     @InjectRepository(PortfolioEntity)
     private readonly repository: Repository<PortfolioEntity>,
-    private readonly servieService: ServiceService,
+    private readonly serviceService: ServiceService,
   ) {}
 
-  async create(dto: CreatePortfolioDto) {
+  async create(dto: CreatePortfolioDto): Promise<PortfolioEntity> {
     const portfolio = new PortfolioEntity();
-    const { serviceIds, ...data } = dto;
-    Object.assign(portfolio, data);
-    portfolio.slug = titleToSlug(portfolio.title);
+    return await this.save(Object.assign(portfolio, dto));
+  }
 
-    if (serviceIds?.length) {
-      portfolio.services =
-        (await this.servieService.findByIds(serviceIds)) || [];
-    }
+  async update(
+    slug: string,
+    dto: CreatePortfolioDto,
+  ): Promise<PortfolioEntity> {
+    const portfolio = await this.repository.findOne(slug);
+    if (!portfolio) throw new NotFoundException([errors.notFound]);
+    return await this.save(Object.assign(portfolio, dto));
+  }
+
+  async save(portfolio: PortfolioEntity): Promise<PortfolioEntity> {
+    portfolio.slug = titleToSlug(portfolio.title);
+    portfolio.services = await this.serviceService.findByIds(
+      (portfolio.services as number[]) || [],
+    );
     return await this.repository.save(portfolio);
   }
 
-  async update(id, dto: CreatePortfolioDto) {
-    const portfolio = await this.findById(id);
-    const { serviceIds, ...data } = dto;
-    Object.assign(portfolio, data);
-    portfolio.slug = titleToSlug(portfolio.title);
-
-    if (serviceIds?.length) {
-      portfolio.services =
-        (await this.servieService.findByIds(serviceIds)) || [];
-    }
-    return await this.repository.save(portfolio);
-  }
-
-  async findBySlug(slug: string) {
+  async findBySlug(slug: string): Promise<PortfolioEntity> {
     return await this.repository.findOne(slug, { relations: ['services'] });
   }
 
-  async findById(id: number) {
-    return await this.repository.findOne(id, { relations: ['services'] });
-  }
-
-  async findByIds(ids: number[]) {
-    return await this.repository.findByIds(ids, { relations: ['services'] });
-  }
-
-  async findAll() {
+  async findAll(): Promise<PortfolioEntity[]> {
     return await this.repository.find({ relations: ['services'] });
   }
 
-  async delete(id: number) {
-    const portfolio = await this.findById(id);
-    portfolio.services = [];
-    await this.repository.save(portfolio);
-    return await this.repository.delete(id);
+  async delete(ids: number[]): Promise<DeleteResult> {
+    return await this.repository.delete(ids);
   }
 }
