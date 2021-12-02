@@ -1,12 +1,12 @@
 <template>
-  <div class="s-button"></div>
+  <div class="s-icon"></div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-  name: "SButton",
+  name: "SIcon",
   props: {},
 
   setup() {
@@ -17,6 +17,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.s-button {
+.s-icon {
 }
 </style>

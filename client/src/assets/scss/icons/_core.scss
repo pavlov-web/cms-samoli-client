@@ -1,0 +1,13 @@
+// base icon class definition
+
+.#{$icon-css-prefix} {
+  font-family: '#{$icon-style-family}';
+}
+
+@function fa-content($icon-var) {
+  @return unquote("\"#{ $icon-var }\"");
+}
+
+@each $name, $icon in $icon-icons {
+  .#{$icon-css-prefix}-#{$name}::before { content: fa-content($icon); }
+}

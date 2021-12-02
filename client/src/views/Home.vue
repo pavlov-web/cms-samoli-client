@@ -1,16 +1,15 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <SButton />
+    <SIcon />
   </div>
 </template>
 
 <script lang="ts">
-import SButton from "@ui/SButton.vue";
-import { Options, Vue } from "vue-class-component";
+import SIcon from "@ui/SIcon.vue";
+import { defineComponent } from "vue";
 
-@Options({
-  components: { SButton },
-})
-export default class Home extends Vue {}
+export default defineComponent({
+  name: "Home",
+  components: { SIcon },
+});
 </script>
