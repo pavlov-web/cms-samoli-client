@@ -63,3 +63,19 @@ $colors: (
   }
 }
 
+label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: $gray-dark;
+}
+
+.s-error {
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: $danger;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translateY(calc(100% + 10px));
+}
+
