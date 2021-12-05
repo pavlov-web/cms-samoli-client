@@ -1,7 +1,6 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { getPgConfig } from 'configs/pg.configs';
+import { config } from './ormconfig';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FileModule } from './modules/file/file.module';
@@ -13,12 +12,7 @@ import { AuthModule } from './modules/auth/auth.module.js';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: getPgConfig,
-    }),
+    TypeOrmModule.forRoot(config),
     AuthModule,
     UserModule,
     FileModule,
