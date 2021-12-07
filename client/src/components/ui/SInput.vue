@@ -2,6 +2,7 @@
   <div :class="[`s-input s-input--${type}`, inputClass()]">
     <label :for="id">{{ label }}</label>
     <input
+      autocomplete="disabled"
       :id="id"
       :type="type"
       :value="modelValue"
@@ -65,7 +66,7 @@ export default defineComponent({
   },
 });
 
-type ButtonSize = "text" | "number";
+type ButtonSize = "text" | "number" | "password";
 type Value = string | number | null;
 </script>
 
@@ -75,6 +76,7 @@ type Value = string | number | null;
   flex-direction: column;
   min-width: 200px;
   position: relative;
+  width: 100%;
 
   input {
     border-radius: 6px;

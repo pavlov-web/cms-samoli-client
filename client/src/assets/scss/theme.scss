@@ -22,13 +22,39 @@ $colors: (
   success: $success
 );
 
+body {
+  background: #f9fbfd;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+  transition: 0.3s;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+p {
+  font-size: 16px;
+
+  &.s-text-small {
+    font-size: 14px;
+  }
+}
+
 .s-icon {
   color: $gray-dark;
 }
 
 @each $name, $color in $colors {
-  .s-icon--#{""+$name} { color: $color }
+  $red: red($color);
+  $green: green($color);
+  $blue: blue($color);
+  $rgbColor: rgb($red, $green, $blue);
 
+  .s-icon--#{""+$name} { color: $color }
 
   .s-button--#{""+$name} {
     background-color: $color!important;
@@ -54,11 +80,17 @@ $colors: (
 
       &:hover {
         color: darken($color, 5%) !important;
-
-        .s-icon {
-          color: darken($color, 5%) !important;
-        }
       }
+    }
+  }
+
+  .s-toast--#{""+$name} {
+    color: $color;
+    border: 1px solid $color;
+    background-color: mix(white, $rgbColor, 88%);
+
+    .s-icon {
+      color: $color;
     }
   }
 }

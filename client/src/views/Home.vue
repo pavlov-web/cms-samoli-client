@@ -41,6 +41,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "Home",
   components: { SValidate, SInput, SButton, SIcon },
+
   data() {
     return {
       form: {
@@ -57,6 +58,10 @@ export default defineComponent({
         },
       },
     };
+  },
+
+  setup() {
+    return {};
   },
 });
 </script>
