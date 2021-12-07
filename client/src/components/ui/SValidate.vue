@@ -1,6 +1,6 @@
 <template>
   <div class="s-validate">
-    <slot />{{ errorIndex }}
+    <slot />
     <span class="s-error">{{ errors[errorIndex] }}</span>
   </div>
 </template>

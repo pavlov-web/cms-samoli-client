@@ -13,8 +13,9 @@ export class UserService {
 
   async create(dto: CreateUserDto) {
     const isExist = await this.repository.findOne({ email: dto.email });
+
     if (isExist) {
-      throw new BadRequestException([errors.emailExist]);
+      throw new BadRequestException(errors.emailExist);
     }
 
     const user = Object.assign(new UserEntity(), dto);
