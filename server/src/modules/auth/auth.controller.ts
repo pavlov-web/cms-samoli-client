@@ -1,13 +1,16 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Req,
   Res,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { AuthService } from './auth.service.js';
+import { Auth } from './decorators/auth.decorator';
 import { LoginAuthDto } from './dto/login-auth.dto.js';
 import { CreateUserDto } from '../user/dto/create-user.dto.js';
 
@@ -30,5 +33,11 @@ export class AuthController {
   @UsePipes(ValidationPipe)
   async register(@Body() dto: CreateUserDto) {
     return this.authService.register(dto);
+  }
+
+  @Get('current')
+  @Auth()
+  currentUser(@Req() request: Request) {
+    return request.user;
   }
 }
