@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Post,
+  Res,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service.js';
 import { LoginAuthDto } from './dto/login-auth.dto.js';
 import { CreateUserDto } from '../user/dto/create-user.dto.js';
@@ -15,13 +17,18 @@ export class AuthController {
 
   @Post('login')
   @UsePipes(ValidationPipe)
-  login(@Body() dto: LoginAuthDto) {
-    return this.authService.login(dto);
+  async login(
+    @Body() dto: LoginAuthDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const { token, ...user } = await this.authService.login(dto);
+    response.cookie('token', token, { httpOnly: true });
+    return user;
   }
 
   @Post('register')
   @UsePipes(ValidationPipe)
-  register(@Body() dto: CreateUserDto) {
+  async register(@Body() dto: CreateUserDto) {
     return this.authService.register(dto);
   }
 }

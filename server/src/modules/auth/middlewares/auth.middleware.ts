@@ -9,14 +9,14 @@ export class AuthMiddleware implements NestMiddleware {
   constructor(private readonly userService: UserService) {}
 
   async use(req: IExpressRequest, res: Response, next: NextFunction) {
-    if (!req.headers.authorization) {
+    if (!req.cookies.token) {
       req.user = null;
       next();
       return;
     }
 
     try {
-      const token = req.headers.authorization.split(' ')[1];
+      const token = req.cookies.token;
       const decode: JwtPayload = verify(token, 'secret');
       req.user = await this.userService.findById(decode.id);
       next();

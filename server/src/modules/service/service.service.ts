@@ -23,8 +23,8 @@ export class ServiceService {
 
   async create(dto: CreateServiceDto) {
     const service = new ServiceEntity();
-    service.slug = titleToSlug(service.title);
     Object.assign(service, dto);
+    service.slug = titleToSlug(service.title);
     return await this.save(service);
   }
 
@@ -32,6 +32,7 @@ export class ServiceService {
     const service = await this.repository.findOne(id);
     if (!service) throw new NotFoundException([errors.notFound]);
     Object.assign(service, dto);
+    service.slug = titleToSlug(service.title);
     return this.save(service);
   }
 

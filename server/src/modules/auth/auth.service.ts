@@ -4,6 +4,7 @@ import { LoginAuthDto } from './dto/login-auth.dto.js';
 import { UserEntity } from '../user/user.entity.js';
 import { errors } from '../../errors/messages.js';
 import { sign } from 'jsonwebtoken';
+import { hash, compare } from 'bcrypt';
 
 export interface IUserResponse
   extends Omit<UserEntity, 'updateTimestamp' | 'toJSON'> {
@@ -20,7 +21,7 @@ export class AuthService {
       throw new BadRequestException([errors.invalidLogin]);
     }
 
-    const isPasswordCorrect = dto.password === user.password;
+    const isPasswordCorrect = await compare(dto.password, user.password);
     if (!isPasswordCorrect) {
       throw new BadRequestException([errors.invalidPassword]);
     }
@@ -29,7 +30,13 @@ export class AuthService {
   }
 
   async register(dto): Promise<IUserResponse> {
-    const user = await this.userService.create(dto);
+    const { password, ...res } = dto;
+    const hashPassword = await hash(password, 10);
+
+    const user = await this.userService.create({
+      password: hashPassword,
+      ...res,
+    });
     return this.buildUserResponse(user);
   }
 
@@ -37,6 +44,7 @@ export class AuthService {
     const token = sign({ id: user.id, email: user.email }, 'secret', {
       expiresIn: '30d',
     });
+    delete user.password;
     return { token, ...user };
   }
 }
