@@ -1,4 +1,5 @@
 import { RootState } from "@/store/types";
+import { EUserActions, User, UserLogin, UserRegister } from "@/types/UserTypes";
 import {
   ActionContext,
   CommitOptions,
@@ -9,51 +10,20 @@ import {
 export type UserState = {
   user: User;
 };
-export type User = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  position: string;
-  role: string;
-  token: string;
-  createAt: Date;
-  updateAt: Date;
-};
-
-export type UserLogin = {
-  email: string;
-  password: string;
-};
-
-export type UserRegister = {
-  firstName: string;
-  lastName: string;
-  role: string;
-  position: string;
-} & UserLogin;
 
 export type UserGetters = {
-  [EUser.GET_USER](state: UserState): User;
+  [EUserActions.GET_USER](state: UserState): User;
 };
 
 export type UserMutations<S = UserState> = {
-  [EUser.SET_USER](state: S, payload: User): void;
+  [EUserActions.SET_USER](state: S, payload: User): void;
 };
 
 export type UserActions = {
-  [EUser.REGISTER]({ commit }: Context, payload: UserRegister): void;
-  [EUser.LOGIN]({ commit }: Context, payload: UserLogin): void;
-  [EUser.CURRENT]({ commit }: Context): void;
+  [EUserActions.LOGIN]({ commit }: Context, payload: UserLogin): void;
+  [EUserActions.REGISTER]({ commit }: Context, payload: UserRegister): void;
+  [EUserActions.CURRENT]({ commit }: Context): void;
 };
-
-export enum EUser {
-  GET_USER = "GET_USER",
-  SET_USER = "SET_USER",
-  REGISTER = "REGISTER",
-  LOGIN = "LOGIN",
-  CURRENT = "CURRENT",
-}
 
 export type Context = {
   commit<K extends keyof UserMutations>(

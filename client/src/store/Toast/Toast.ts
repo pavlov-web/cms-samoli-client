@@ -1,35 +1,64 @@
 import { getUniqueId } from "@/helpers";
 import {
-  IToastGetters,
-  IToast,
-  IToastState,
+  ToastGetters,
+  Toast,
+  ToastState,
   EToast,
-  IToastMutations,
+  ToastMutations,
+  ToastActions,
 } from "@/store/Toast/types";
 import { RootState } from "@/store/types";
-import { GetterTree, Module, MutationTree } from "vuex";
+import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
 
-const state: IToastState = {
+const state: ToastState = {
   toast: [],
 };
 
-const getters: GetterTree<IToastState, RootState> & IToastGetters = {
-  [EToast.GET_ALL_TOAST](state): IToast[] {
+const getters: GetterTree<ToastState, RootState> & ToastGetters = {
+  [EToast.GET_ALL_TOAST](state): Toast[] {
     return state.toast;
   },
 };
 
-const mutations: MutationTree<IToastState> & IToastMutations = {
+const mutations: MutationTree<ToastState> & ToastMutations = {
   [EToast.PUSH_TOAST](state, payload) {
-    state.toast.push({ ...payload, id: getUniqueId() });
+    state.toast.push({ ...payload, id: getUniqueId("toast") });
     setTimeout(() => {
       state.toast.shift();
     }, 3000);
   },
 };
 
-export const toast: Module<IToastState, RootState> = {
+const actions: ActionTree<ToastState, RootState> & ToastActions = {
+  [EToast.PUSH_ERROR]({ commit }, payload: string) {
+    commit(EToast.PUSH_TOAST, {
+      type: "danger",
+      message: payload,
+    });
+  },
+  [EToast.PUSH_WARNING]({ commit }, payload: string) {
+    commit(EToast.PUSH_TOAST, {
+      type: "warning",
+      message: payload,
+    });
+  },
+  [EToast.PUSH_INFO]({ commit }, payload: string) {
+    commit(EToast.PUSH_TOAST, {
+      type: "info",
+      message: payload,
+    });
+  },
+  [EToast.PUSH_SUCCESS]({ commit }, payload: string) {
+    commit(EToast.PUSH_TOAST, {
+      type: "success",
+      message: payload,
+    });
+  },
+};
+
+export const toast: Module<ToastState, RootState> = {
   state,
   getters,
   mutations,
+  actions,
 };

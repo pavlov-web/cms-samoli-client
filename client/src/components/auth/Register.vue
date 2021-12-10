@@ -87,7 +87,8 @@
 
 <script lang="ts">
 import { useStore } from "@/store";
-import { EUser, UserRegister } from "@/store/User/types";
+import { EToast } from "@/store/Toast/types";
+import { EUserActions, UserRegister } from "@/types/UserTypes";
 import SButton from "@ui/SButton.vue";
 import SInput from "@ui/SInput/SInput.vue";
 import SValidate from "@ui/SValidate.vue";
@@ -99,7 +100,7 @@ export default defineComponent({
   components: { SValidate, SInput, SButton },
 
   setup() {
-    const { dispatch, getters } = useStore();
+    const { dispatch, getters, commit } = useStore();
     const router = useRouter();
 
     const errors = {
@@ -143,18 +144,17 @@ export default defineComponent({
 
     const sendForm = async () => {
       if (form.value.password === rePassword.value.val) {
-        await dispatch(EUser.REGISTER, form.value);
+        await dispatch(EUserActions.REGISTER, form.value);
         const user = getters.GET_USER;
         console.log(user);
         if (user.id) {
           await router.push("/");
         }
       } else {
-        console.log("несовпадают пароли");
-        // commit(EToast.PUSH_TOAST, {
-        //   type: "danger",
-        //   message: `Пароли не совпадают`,
-        // });
+        commit(EToast.PUSH_TOAST, {
+          type: "danger",
+          message: `Пароли не совпадают`,
+        });
       }
     };
     return { form, valid, rePassword, sendForm };

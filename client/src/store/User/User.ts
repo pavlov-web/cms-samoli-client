@@ -1,15 +1,13 @@
-import api from "@/api/axios";
+import { userService } from "@/services/api/UserService";
+import { ErrorService } from "@/services/ErrorService";
 import { RootState } from "@/store/types.js";
+import { EUserActions, User } from "@/types/UserTypes";
 import { ActionTree, GetterTree, MutationTree, Module } from "vuex";
 import {
   UserGetters,
-  User,
   UserState,
-  EUser,
   UserMutations,
   UserActions,
-  UserLogin,
-  UserRegister,
 } from "@/store/User/types";
 
 const state: UserState = {
@@ -17,53 +15,43 @@ const state: UserState = {
 };
 
 const getters: GetterTree<UserState, RootState> & UserGetters = {
-  [EUser.GET_USER](state): User {
+  [EUserActions.GET_USER](state): User {
     return state.user;
   },
 };
 
 const mutations: MutationTree<UserState> & UserMutations = {
-  [EUser.SET_USER](state, payload) {
+  [EUserActions.SET_USER](state, payload) {
     state.user = payload;
   },
 };
 
 const actions: ActionTree<UserState, RootState> & UserActions = {
-  async [EUser.CURRENT]({ commit }) {
-    await api
-      .get<null, { data: User }>("/auth/current")
-      .then(({ data }) => {
-        commit(EUser.SET_USER, data);
-        return data;
-      })
-      .catch(({ response }) => {
-        console.log(response.data);
-        return undefined;
-      });
+  async [EUserActions.LOGIN]({ commit }, payload) {
+    try {
+      const { data } = await userService.login(payload);
+      commit(EUserActions.SET_USER, data);
+    } catch (error) {
+      ErrorService(error);
+    }
   },
 
-  async [EUser.REGISTER]({ commit }, payload) {
-    await api
-      .post<UserRegister, { data: User }>("/auth/register", payload)
-      .then(({ data }) => {
-        commit(EUser.SET_USER, data);
-        return data;
-      })
-      .catch(({ response }) => {
-        console.log(response.data);
-      });
+  async [EUserActions.REGISTER]({ commit }, payload) {
+    try {
+      const { data } = await userService.register(payload);
+      commit(EUserActions.SET_USER, data);
+    } catch (error) {
+      ErrorService(error);
+    }
   },
 
-  async [EUser.LOGIN]({ commit }, payload) {
-    console.log(payload);
-    await api
-      .post<UserLogin, { data: User }>("/auth/login", payload)
-      .then(({ data }) => {
-        commit(EUser.SET_USER, data);
-      })
-      .catch(({ response }) => {
-        console.log(response.data);
-      });
+  async [EUserActions.CURRENT]({ commit }) {
+    try {
+      const { data } = await userService.current();
+      commit(EUserActions.SET_USER, data);
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
 

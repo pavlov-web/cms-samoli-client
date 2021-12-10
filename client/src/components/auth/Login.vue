@@ -47,7 +47,8 @@
 
 <script lang="ts">
 import { useStore } from "@/store";
-import { EUser, UserLogin } from "@/store/User/types";
+import { EToast } from "@/store/Toast/types";
+import { EUserActions, UserLogin } from "@/types/UserTypes";
 import SButton from "@ui/SButton.vue";
 import SInput from "@ui/SInput/SInput.vue";
 import SValidate from "@ui/SValidate.vue";
@@ -83,10 +84,13 @@ export default defineComponent({
       },
     });
     const sendForm = async () => {
-      await dispatch(EUser.LOGIN, form);
-      console.log(form.email);
-      await router.push("/");
+      if (form.email && form.password) {
+        await dispatch(EUserActions.LOGIN, form);
+        await router.push("/");
+        dispatch(EToast.PUSH_SUCCESS, "Регистрация успешна");
+      }
     };
+
     return { form, valid, sendForm };
   },
 });
