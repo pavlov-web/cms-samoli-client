@@ -22,6 +22,7 @@ export class AuthService {
     }
 
     const isPasswordCorrect = await compare(dto.password, user.password);
+    console.log(isPasswordCorrect);
     if (!isPasswordCorrect) {
       throw new BadRequestException([errors.invalidPassword]);
     }

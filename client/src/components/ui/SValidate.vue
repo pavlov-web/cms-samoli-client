@@ -1,7 +1,7 @@
 <template>
   <div class="s-validate">
     <slot />
-    <span class="s-error">{{ errors[errorIndex] }}</span>
+    <span class="s-error-message">{{ errors[errorIndex] }}</span>
   </div>
 </template>
 

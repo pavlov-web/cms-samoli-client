@@ -1,3 +1,4 @@
 import { uniqueId } from "lodash";
 
-export const getUniqueId = (): string => uniqueId();
+export const getUniqueId = (prefix: string): string =>
+  `${prefix}_${uniqueId()}`;

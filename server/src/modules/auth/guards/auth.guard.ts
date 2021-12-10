@@ -12,6 +12,6 @@ export class AuthGuard implements CanActivate {
   canActivate(ctx: ExecutionContext): boolean {
     const request = ctx.switchToHttp().getRequest<IExpressRequest>();
     if (request.user) return true;
-    throw new UnauthorizedException([dtoErrors.unauthorized]);
+    throw new UnauthorizedException(dtoErrors.unauthorized);
   }
 }

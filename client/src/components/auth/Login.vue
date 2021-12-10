@@ -15,44 +15,44 @@
             placeholder="E-mail"
             :error="valid.email.isError"
             v-model="form.email"
+            required
           />
         </s-validate>
       </div>
+      <s-validate
+        :rules="valid.password.rules"
+        :errors="valid.password.errors"
+        v-model:is-error="valid.password.isError"
+      >
+        <s-input
+          label="Пароль"
+          placeholder="Пароль"
+          :error="valid.password.isError"
+          v-model="form.password"
+          type="password"
+        />
+      </s-validate>
       <div class="s-field">
-        <s-validate
-          :rules="valid.password.rules"
-          :errors="valid.password.errors"
-          v-model:is-error="valid.password.isError"
-        >
-          <s-input
-            label="Пароль"
-            placeholder="Пароль"
-            :error="valid.password.isError"
-            v-model="form.password"
-            type="password"
-          />
-        </s-validate>
+        <p class="s-text-small s-mt-3">
+          Еще нет учетной записи?
+          <router-link to="/auth/register">Зарегистрироваться</router-link>
+        </p>
       </div>
       <div class="s-d-flex s-jc-end s-ai-center">
-        <s-button class="s-button--success s-ml-2" @click="sendForm">
-          Войти
-        </s-button>
+        <s-button class="s-success" @click="sendForm"> Войти </s-button>
       </div>
-      <p class="s-text-small s-mt-3">
-        Еще нет учетной записи?
-        <router-link to="/auth/register">Зарегистрироваться</router-link>
-      </p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { useStore } from "@/store";
-import { EUser, IUserLogin } from "@/store/User/types";
+import { EUser, UserLogin } from "@/store/User/types";
 import SButton from "@ui/SButton.vue";
-import SInput from "@ui/SInput.vue";
+import SInput from "@ui/SInput/SInput.vue";
 import SValidate from "@ui/SValidate.vue";
-import { defineComponent, ref } from "vue";
+import { defineComponent, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Login",
@@ -60,14 +60,15 @@ export default defineComponent({
 
   setup() {
     const { dispatch } = useStore();
+    const router = useRouter();
     const errors = {
       email: "Некоректный E-mail",
       required: "Поле обязательно",
       min: "Минимальная длина пароля 6 символов",
     };
-    const form = ref<IUserLogin>({
-      email: "",
-      password: "",
+    const form = reactive<UserLogin>({
+      email: " ",
+      password: " ",
     });
     const valid = ref({
       email: {
@@ -81,22 +82,14 @@ export default defineComponent({
         errors: [errors.min],
       },
     });
-    const sendForm = () => {
-      dispatch(EUser.LOGIN, form.value);
+    const sendForm = async () => {
+      await dispatch(EUser.LOGIN, form);
+      console.log(form.email);
+      await router.push("/");
     };
     return { form, valid, sendForm };
   },
 });
 </script>
 
-<style scoped lang="scss">
-.login {
-  max-width: 380px;
-  width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 0.75rem 1.5rem rgb(18 38 63 / 3%);
-  border: 1px solid #ebecec;
-  padding: 60px 40px;
-  background-color: #fff;
-}
-</style>
+<style scoped lang="scss"></style>

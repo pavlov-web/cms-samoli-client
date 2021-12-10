@@ -30,5 +30,18 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
   }
+
+  .register,
+  .login {
+    max-width: 320px;
+    border-radius: 10px;
+    padding: 40px 40px;
+    background-color: $gray-light;
+    @include shadow();
+
+    ::v-deep(.s-button) {
+      width: 100%;
+    }
+  }
 }
 </style>

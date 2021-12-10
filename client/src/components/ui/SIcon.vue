@@ -31,22 +31,29 @@ export default defineComponent({
 <style scoped lang="scss">
 @import "~@/assets/scss/icons/icons.scss";
 .s-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   font-style: normal;
-  transition: 0.2s;
+  line-height: 1;
+  transition: $transition;
+  position: relative;
+  display: block;
+
+  &:before {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 
   &--small {
     font-size: 12px;
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
   }
 
   &--medium {
-    font-size: 18px;
-    width: 22px;
-    height: 22px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
   }
 
   &--large {
@@ -60,7 +67,7 @@ export default defineComponent({
   }
 
   &--normal {
-    font-weight: 400;
+    font-weight: 300;
   }
 
   &--solid {

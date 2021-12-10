@@ -1,0 +1,96 @@
+$white: #fff;
+$gray: #DEDEDE;
+$gray-light: #FAFAFA;
+$gray-dark: #777777;
+$black: #363636;
+$blue-dark: #1572E8;
+$violet: #6861CE;
+$light-blue: #48ABF7;
+$yellow: #FFAD46;
+$reds: #F25961;
+$greens: #31CE36;
+
+$primary: #1572E8;
+$secondary: #6861CE;
+$info: #48ABF7;
+$warning: #FFAD46;
+$danger: #F25961;
+$success: #31CE36;
+
+$transition: 0.3s;
+$round: 10px;
+$padding: 8px;
+
+@mixin shadow($color: $black) {
+  box-shadow: 2px 2px 5px 1px rgba(red($color), green($color), blue($color), 0.1), -2px -2px 8px rgba(255, 255, 255, .7);
+}
+
+@mixin border($color:$white, $size: 1px) {
+  border: $size solid $color
+}
+
+$colors: (
+  'white': $gray,
+  'dark': $black,
+  'primary': $primary,
+  'secondary': $secondary,
+  'info': $info,
+  'warning': $warning,
+  'danger': $danger,
+  'success': $success
+);
+
+body {
+  background: #f9fbfd;
+}
+
+
+
+p {
+  font-size: 16px;
+
+  &.s-text-small {
+    font-size: 14px;
+  }
+}
+
+.s-icon {
+  color: $black;
+}
+
+@each $name, $color in $colors {
+  $red: red($color);
+  $green: green($color);
+  $blue: blue($color);
+  $rgbColor: rgb($red, $green, $blue);
+
+  .s-#{$name} {
+    &.s-button {
+      background-color: $color;
+      color: $white;
+      @include border($color);
+
+      &:hover {
+        background-color: darken($color, 5%);
+        @include border(darken($color, 5%));
+      }
+
+      &.s-button--press {
+        background-color: lighten($color, 5%);
+      }
+    }
+  }
+
+  .s-toast--#{""+$name} {
+    color: $color;
+    border: 1px solid $color;
+    background-color: mix(white, $rgbColor, 88%);
+
+    .s-icon {
+      color: $color;
+    }
+  }
+}
+
+
+

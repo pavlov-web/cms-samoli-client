@@ -1,0 +1,101 @@
+body {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 18px;
+  color: $black;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+h3 {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+small {
+  font-size: 14px;
+  line-height: 16px;
+}
+
+label {
+  font-size: 12px;
+  line-height: 14px;
+  color: $gray-dark;
+  padding-left: $padding;
+  padding-bottom: $padding;
+
+  span {
+    color: $reds;
+  }
+}
+
+a {
+  color: $light-blue;
+  text-decoration: none;
+  transition: 0.3s;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+ul, ol {
+  list-style: none;
+
+  &:not([class]) {
+    padding-left: 16px;
+
+    li {
+      margin-bottom: 8px;
+      position: relative;
+    }
+  }
+}
+
+ul:not([class]) {
+  li {
+    &:not([class]):after {
+      position: absolute;
+      left: -16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      background: $yellow;
+      border-radius: 50%;
+      content: ''
+    }
+
+    & > ul > li {
+      &:after {
+        width: 6px!important;
+        height: 6px!important;
+      }
+    }
+  }
+}
+
+
+.s-error-message {
+  font-size: 10px;
+  line-height: 1;
+  color: $danger;
+  left: $padding;
+  position: absolute;
+  bottom: 0;
+  transform: translateY(calc(100% + #{$padding} / 2));
+}
+
+

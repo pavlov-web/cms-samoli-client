@@ -15,6 +15,7 @@
             placeholder="Имя"
             :error="valid.firstName.isError"
             v-model="form.firstName"
+            required
           />
         </s-validate>
       </div>
@@ -29,6 +30,7 @@
             placeholder="Фамилия"
             :error="valid.lastName.isError"
             v-model="form.lastName"
+            required
           />
         </s-validate>
       </div>
@@ -43,6 +45,7 @@
             placeholder="E-mail"
             :error="valid.email.isError"
             v-model="form.email"
+            required
           />
         </s-validate>
       </div>
@@ -61,53 +64,54 @@
           />
         </s-validate>
       </div>
+      <s-input
+        label="Повторите пароль"
+        placeholder="Пароль"
+        v-model="rePassword.val"
+        type="password"
+      />
       <div class="s-field">
-        <s-input
-          label="Повторите пароль"
-          placeholder="Пароль"
-          v-model="rePassword.val"
-          type="password"
-        />
+        <p class="s-text-small s-mt-3">
+          Уже есть учетная запись?
+          <router-link to="/auth/login">Войти</router-link>
+        </p>
       </div>
       <div class="s-d-flex s-jc-end s-ai-center">
-        <s-button class="s-button--success s-ml-2" @click="sendForm">
+        <s-button class="s-success" @click="sendForm">
           Зарегистрироваться
         </s-button>
       </div>
-      <p class="s-text-small s-mt-3">
-        Уже есть учетная запись?
-        <router-link to="/auth/login">Войти</router-link>
-      </p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { useStore } from "@/store";
-import { EToast } from "@/store/Toast/types";
-import { EUser, IUserRegister } from "@/store/User/types";
+import { EUser, UserRegister } from "@/store/User/types";
 import SButton from "@ui/SButton.vue";
-import SInput from "@ui/SInput.vue";
+import SInput from "@ui/SInput/SInput.vue";
 import SValidate from "@ui/SValidate.vue";
 import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Register",
   components: { SValidate, SInput, SButton },
 
   setup() {
-    const { dispatch, commit } = useStore();
+    const { dispatch, getters } = useStore();
+    const router = useRouter();
 
     const errors = {
       email: "Некоректный E-mail",
       required: "Поле обязательно",
       min: "Минимальная длина пароля 6 символов",
     };
-    const form = ref<IUserRegister>({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
+    const form = ref<UserRegister>({
+      firstName: " ",
+      lastName: " ",
+      email: " ",
+      password: " ",
       role: "admin",
       position: "admin",
     });
@@ -139,12 +143,18 @@ export default defineComponent({
 
     const sendForm = async () => {
       if (form.value.password === rePassword.value.val) {
-        dispatch(EUser.REGISTER, form.value);
+        await dispatch(EUser.REGISTER, form.value);
+        const user = getters.GET_USER;
+        console.log(user);
+        if (user.id) {
+          await router.push("/");
+        }
       } else {
-        commit(EToast.PUSH_TOAST, {
-          type: "danger",
-          message: `Пароли не совпадают`,
-        });
+        console.log("несовпадают пароли");
+        // commit(EToast.PUSH_TOAST, {
+        //   type: "danger",
+        //   message: `Пароли не совпадают`,
+        // });
       }
     };
     return { form, valid, rePassword, sendForm };
@@ -152,14 +162,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
-.register {
-  max-width: 380px;
-  width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 0.75rem 1.5rem rgb(18 38 63 / 3%);
-  border: 1px solid #ebecec;
-  padding: 60px 40px;
-  background-color: #fff;
-}
-</style>
+<style scoped lang="scss"></style>
