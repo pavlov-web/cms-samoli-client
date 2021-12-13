@@ -1,0 +1,139 @@
+$height: $padding * 4;
+
+.s-input {
+  display: inline-flex;
+  width: 240px;
+  flex-direction: column;
+
+  input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    transition: $transition;
+    padding-left: $padding;
+    padding-right: $padding;
+    border-radius: $round;
+
+    &::placeholder {
+      color: $gray-dark;
+    }
+  }
+
+  .s-icon-left,
+  .s-icon-right {
+    padding: $padding - 1;
+    color: $gray-dark;
+    transition: $transition;
+    margin-bottom: -1px;
+    margin-top: -1px;
+    @include border(transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .s-icon {
+      color: inherit;
+      transition: 0s;
+    }
+  }
+
+  .s-icon-left {
+    margin-left: -1px;
+    border-radius: $round 0 0 $round;
+  }
+
+  .s-icon-right {
+    margin-right: -1px;
+    border-radius: 0 $round $round 0;
+  }
+
+  .s-icon-left:not(.s-icon-action)  {
+    padding-right: 0;
+  }
+
+  .s-icon-success {
+    color: $greens;
+  }
+
+  .s-icon-error {
+    color: $reds;
+  }
+
+  .s-icon-action {
+    @include border($gray-light);
+    background-color: $gray-light;
+  }
+
+  &-wrapper {
+    display: flex;
+    height: $height;
+    border-radius: $round;
+    background-color: $white;
+    transition: $transition;
+    @include border($white);
+    @include shadow();
+
+    &:hover {
+      @include border($gray);
+
+      .s-icon-action {
+        @include border($gray);
+      }
+    }
+
+    .s-input.s-focus & {
+      @include border($yellow);
+      @include shadow($yellow);
+
+      & .s-icon-action {
+        background-color: $yellow;
+        @include border($yellow);
+        color: $white;
+      }
+    }
+
+    .s-input.s-success & {
+      @include border($greens);
+      @include shadow($greens);
+
+      & .s-icon-action {
+        background-color: $greens;
+        @include border($greens);
+        color: $white;
+      }
+    }
+
+    .s-input.s-error & {
+      @include border($reds);
+      @include shadow($reds);
+
+      & .s-icon-action {
+        background-color: $reds;
+        @include border($reds);
+        color: $white;
+      }
+    }
+
+    .s-input.s-disabled & {
+      box-shadow: none;
+      background-color: $gray-light;
+      @include border($gray);
+
+      input::placeholder {
+        color: transparentize($gray-dark, 0.3);
+      }
+
+      & .s-icon-left,
+      & .s-icon-right {
+        color: transparentize($gray-dark, 0.3);
+      }
+
+      & .s-icon-action {
+        cursor: auto;
+        background-color: $gray-light;
+        @include border($gray);
+      }
+    }
+  }
+}
