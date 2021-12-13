@@ -58,6 +58,15 @@ const actions: ActionTree<UserState, RootState> & UserActions = {
       console.log(error);
     }
   },
+
+  async [EUserActions.LOGOUT]({ commit }) {
+    try {
+      await userService.logout();
+      commit(EUserCommits.SET_USER, {} as User);
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 
 export const user: Module<UserState, RootState> = {

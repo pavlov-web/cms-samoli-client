@@ -113,11 +113,6 @@ export default defineComponent({
 
     onMounted(() => {
       document.addEventListener("click", isFocus);
-      setTimeout(() => {
-        (
-          (root.value as HTMLElement).querySelector("input") as HTMLInputElement
-        ).value = "";
-      }, 500);
     });
 
     onDeactivated(() => {

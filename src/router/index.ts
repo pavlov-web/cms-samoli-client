@@ -10,6 +10,7 @@ import Material from "@/views/Material.vue";
 import Media from "@/views/Media.vue";
 import Portfolio from "@/views/Portfolio.vue";
 import Service from "@/views/Service.vue";
+import ShortCard from "@/views/ShortCard.vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 
@@ -27,6 +28,11 @@ const routes: Array<RouteRecordRaw> = [
       visible: true,
       icon: "analytics",
     },
+  },
+  {
+    path: "/short-card",
+    name: "Быстрая карточка",
+    component: ShortCard,
   },
   {
     path: "/analytic",

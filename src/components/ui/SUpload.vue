@@ -1,7 +1,7 @@
 <template>
   <div class="s-upload">
     <div class="s-upload-heading">
-      <label :for="id">Выберите файлы</label>
+      <label :for="id">{{ label }}</label>
       <s-button
         icon="upload"
         size="small"
@@ -43,21 +43,24 @@
 </template>
 
 <script lang="ts">
-import { getUniqueId } from "@/helpers";
-import { fileService } from "@/services/api/FileService";
-import api from "@/services/axios";
-import { useStore } from "@/store";
-import { EToast } from "@/store/Toast/types";
 import { FileBuffer, FilePreview, FileUploadParams } from "@/types/FileTypes";
+import { defineComponent, reactive, ref } from "vue";
+import { getUniqueId } from "@/helpers";
+import { useStore } from "@/store";
+import { fileService } from "@/services/api/FileService";
+import { EToast } from "@/store/Toast/types";
 import SButton from "@ui/SButton.vue";
 import SCircleProgress from "@ui/SCircleProgress.vue";
 import SIcon from "@ui/SIcon.vue";
-import { defineComponent, reactive, ref } from "vue";
 
 export default defineComponent({
   name: "SUpload",
   components: { SCircleProgress, SButton, SIcon },
   props: {
+    label: {
+      type: String,
+      default: "Выберите файлы",
+    },
     type: {
       type: Number,
       default: 0,
@@ -112,14 +115,7 @@ export default defineComponent({
         const { name, size, type } = file;
         const buffer = await readURL(file);
         if (!isUniqueName(name)) {
-          files.push({
-            name,
-            size,
-            type,
-            buffer,
-            progress: 0,
-            loading: false,
-          });
+          files.push({ name, size, type, buffer, progress: 0, loading: false });
         } else {
           dispatch(EToast.PUSH_WARNING, `Файл ${name} уже добавлен`);
         }
@@ -133,13 +129,7 @@ export default defineComponent({
         reader.readAsDataURL(file);
       });
     };
-    api.post(
-      "https://api.telegram.org/bot5097965388:AAEWI1Yp_ZZW3DeEIxb6DY7UdnqOf0hjhKc/sendMessage",
-      {
-        chat_id: 740104160,
-        text: "Message",
-      }
-    );
+
     // http://62.113.97.237:8081/bot5097965388:AAEWI1Yp_ZZW3DeEIxb6DY7UdnqOf0hjhKc/sendMessage?chat_id=740104160&text=Message
     // open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security
     // ./telegram-bot-api --api-id=16703751 --api-hash=99ca9d475e333434d9c388ffb9464010

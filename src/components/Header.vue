@@ -4,6 +4,12 @@
       <img src="../../src/assets/images/logo.png" alt="" />
     </router-link>
     <div class="toolbar">
+      <s-button
+        class="s-success no-shadow"
+        @click="$router.push('/short-card')"
+      >
+        Быстрая карточка
+      </s-button>
       <s-button icon="bell" class="s-primary" />
       <s-button icon="envelope" class="s-primary" />
       <div class="user-info-wrapper">

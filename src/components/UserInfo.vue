@@ -21,16 +21,20 @@
       </ul>
     </div>
     <div class="user-info-actions">
-      <s-button icon="sign-out" class="s-secondary">Выход</s-button>
+      <s-button icon="sign-out" class="s-secondary" @click="logOut"
+        >Выход</s-button
+      >
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { User } from "@/types/UserTypes";
+import { useStore } from "@/store";
+import { EUserActions, User } from "@/types/UserTypes";
 import SButton from "@ui/SButton.vue";
 import SIcon from "@ui/SIcon.vue";
 import { defineComponent, PropType } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "UserInfo",
@@ -43,7 +47,13 @@ export default defineComponent({
   },
 
   setup() {
-    return {};
+    const { dispatch } = useStore();
+    const router = useRouter();
+    const logOut = async () => {
+      await dispatch(EUserActions.LOGOUT);
+      await router.push("/auth/login");
+    };
+    return { logOut };
   },
 });
 </script>

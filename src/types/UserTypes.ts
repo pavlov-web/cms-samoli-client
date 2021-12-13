@@ -28,6 +28,7 @@ export enum EUserActions {
   REGISTER = "REGISTER",
   LOGIN = "LOGIN",
   CURRENT = "CURRENT",
+  LOGOUT = "LOGOUT",
 }
 
 export enum EUserGetters {

@@ -4,16 +4,16 @@ export const validator = {
     return !!value.match(mailFormat);
   },
 
-  max: (value: number, limit: number): boolean => {
-    return formatValue(value) <= +limit;
+  max: (value: string, limit: number): boolean => {
+    return value.length <= +limit;
   },
 
-  min: (value: number, limit: number): boolean => {
-    return formatValue(value) >= +limit;
+  min: (value: string, limit: number): boolean => {
+    return value.length >= +limit;
   },
 
-  minmax: (value: number | string, from: number, to: number): boolean => {
-    return formatValue(value) >= +from && formatValue(value) <= +to;
+  minmax: (value: string, from: number, to: number): boolean => {
+    return value.length >= +from && value.length <= +to;
   },
 
   required: (value: number | string): boolean => {

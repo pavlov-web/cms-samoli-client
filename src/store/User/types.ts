@@ -30,6 +30,7 @@ export type UserActions = {
   [EUserActions.LOGIN]({ commit }: Context, payload: UserLogin): void;
   [EUserActions.REGISTER]({ commit }: Context, payload: UserRegister): void;
   [EUserActions.CURRENT]({ commit }: Context): void;
+  [EUserActions.LOGOUT]({ commit }: Context): void;
 };
 
 export type Context = {

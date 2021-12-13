@@ -91,5 +91,8 @@ export default defineComponent({
     background-color: transparent !important;
     border: none !important;
   }
+  &.no-shadow {
+    @include shadow-card();
+  }
 }
 </style>
